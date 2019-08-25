@@ -14,9 +14,6 @@ public class HockeyTeamService {
         final String url = "http://statsapi.web.nhl.com/api/v1/teams";
         return restTemplateService.getHttpRestResponse(url);
     }
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//        TeamDto[] team = mapper.readValue(body, TeamDto[].class);
 
     public String getCup()
     {

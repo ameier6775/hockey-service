@@ -30,19 +30,12 @@ public class AppUser {
     @Column(name = "password")
     private String password;
 
-    private Boolean signedIn;
-
     @OneToMany
     private List<HockeyTeam> teamIds;
 
     @OneToMany
     private List<Player> playerIds;
 
-    public AppUser(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
-
-    public <T> AppUser(String userName, String password, List<T> emptyList) {
-    }
 }
+
+

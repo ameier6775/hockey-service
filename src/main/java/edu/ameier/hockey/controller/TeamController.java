@@ -13,7 +13,7 @@ public class TeamController {
         this.hockeyTeamService = hockeyTeamService;
     }
 
-    @GetMapping("/team")
+    @GetMapping("/teams")
     public String getTeams() {
         return hockeyTeamService.getTeams();
     }

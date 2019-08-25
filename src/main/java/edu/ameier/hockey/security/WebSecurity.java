@@ -32,7 +32,7 @@ public class WebSecurity  extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.POST, LOG_IN_URL).permitAll()
-                .antMatchers("**", H2_URL).permitAll()
+                .antMatchers(H2_URL).permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -42,12 +42,13 @@ public class WebSecurity  extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .httpBasic()
-                .disable();
+                .disable()
+        .headers().frameOptions().disable();
 
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
