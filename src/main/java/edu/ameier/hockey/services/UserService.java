@@ -3,22 +3,35 @@ package edu.ameier.hockey.services;
 import edu.ameier.hockey.dto.TeamFavorite;
 import edu.ameier.hockey.models.AppUser;
 import edu.ameier.hockey.models.HockeyTeam;
+import edu.ameier.hockey.repositories.TeamRepository;
 import edu.ameier.hockey.repositories.UserRepository;
+import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static edu.ameier.hockey.security.SecurityConstants.*;
 
 @Service
+@Slf4j
 public class UserService {
     private UserRepository userRepository;
-    private RestTemplateService restTemplateService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private TeamRepository teamRepository;
 
-    public UserService(UserRepository userRepository, RestTemplateService restTemplateService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.restTemplateService = restTemplateService;
+        this.teamRepository = teamRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -33,7 +46,9 @@ public class UserService {
         if(appuser.getTeamIds().isEmpty()) {
             List<HockeyTeam> favorites = new ArrayList<>();
             HockeyTeam favorite = new HockeyTeam();
-            favorite.setId(teamFavorite.getTeamId());
+            favorite.setTeamId(teamFavorite.getTeamId());
+            teamRepository.save(favorite);
+
             favorites.add(favorite);
             appuser.setTeamIds(favorites);
             userRepository.save(appuser);
@@ -42,6 +57,7 @@ public class UserService {
             List<HockeyTeam> favorites = appuser.getTeamIds();
             HockeyTeam favorite = new HockeyTeam();
             favorite.setId(teamFavorite.getTeamId());
+            teamRepository.save(favorite);
             favorites.add(favorite);
             appuser.setTeamIds(favorites);
             userRepository.save(appuser);
@@ -50,6 +66,29 @@ public class UserService {
         return appuser;
     }
 
+    public Map<String, Long> getUserId(HttpServletRequest request)
+    {
+        String token = request.getHeader(HEADER_STRING);
+
+        if (token == null)
+        {
+            throw new RuntimeException("token is null");
+        }
+            SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
+            // parse the token.
+            String userName = Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                    .getBody()
+                    .getSubject();
+
+            AppUser appUser = userRepository.findByUserName(userName);
+
+        Map<String, Long> response = new HashMap<>();
+
+        response.put("userId", appUser.getId());
+        return response;
+    }
 //    public Boolean checkUser(String username, String password) {
 //        List<AppUser> appUsers = userRepository.findAll();
 //        for (AppUser appUser :

@@ -16,7 +16,11 @@ import lombok.NoArgsConstructor;
 public class HockeyTeam {
 
     @Id
-    @Column(name = "team_Id", unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true)
     private Long id;
+
+    @Column(name = "team_id")
+    private Long teamId;
 
 }
