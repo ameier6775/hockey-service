@@ -34,6 +34,14 @@ public class UserController {
     {
         return userService.getUserId(request);
     }
+
+//    @PostMapping("/user/team/delete")
+//    public AppUser deleteTeam(@RequestBody TeamFavorite teamFavorite) {
+//        if (teamFavorite.getTeamId() == null ||  teamFavorite.getUserId() == null) {
+//            throw new RuntimeException("No id sent");
+//        }
+//        return userService.removeTeamFromFavorites(teamFavorite);
+//    }
 }
     //    @PostMapping("/login")
 //    public AppUser checkUser(String username, String password) {

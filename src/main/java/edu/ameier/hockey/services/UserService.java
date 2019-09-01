@@ -48,7 +48,6 @@ public class UserService {
             HockeyTeam favorite = new HockeyTeam();
             favorite.setTeamId(teamFavorite.getTeamId());
             teamRepository.save(favorite);
-
             favorites.add(favorite);
             appuser.setTeamIds(favorites);
             userRepository.save(appuser);
@@ -56,7 +55,7 @@ public class UserService {
         else {
             List<HockeyTeam> favorites = appuser.getTeamIds();
             HockeyTeam favorite = new HockeyTeam();
-            favorite.setId(teamFavorite.getTeamId());
+            favorite.setTeamId(teamFavorite.getTeamId());
             teamRepository.save(favorite);
             favorites.add(favorite);
             appuser.setTeamIds(favorites);
@@ -65,6 +64,16 @@ public class UserService {
 
         return appuser;
     }
+
+//    public AppUser removeTeamFromFavorites(TeamFavorite teamFavorite) {
+//        AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
+//        List<HockeyTeam> favorites = appuser.getTeamIds();
+//        HockeyTeam favorite = teamRepository.getOne(teamFavorite.getTeamId());
+//        favorites.remove(favorite);
+//        appuser.setTeamIds(favorites);
+//        userRepository.save(appuser);
+//        return appuser;
+//    }
 
     public Map<String, Long> getUserId(HttpServletRequest request)
     {
