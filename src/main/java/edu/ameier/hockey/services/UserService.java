@@ -7,8 +7,6 @@ import edu.ameier.hockey.repositories.TeamRepository;
 import edu.ameier.hockey.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -65,15 +63,16 @@ public class UserService {
         return appuser;
     }
 
-//    public AppUser removeTeamFromFavorites(TeamFavorite teamFavorite) {
-//        AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
-//        List<HockeyTeam> favorites = appuser.getTeamIds();
-//        HockeyTeam favorite = teamRepository.getOne(teamFavorite.getTeamId());
-//        favorites.remove(favorite);
-//        appuser.setTeamIds(favorites);
-//        userRepository.save(appuser);
-//        return appuser;
-//    }
+    public AppUser removeTeamFromFavorites(TeamFavorite teamFavorite) {
+        AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
+        List<HockeyTeam> favorites = appuser.getTeamIds();
+        HockeyTeam favorite = teamRepository.getOne(teamFavorite.getTeamId());
+        favorites.remove(favorite);
+        teamRepository.delete(favorite);
+        appuser.setTeamIds(favorites);
+        userRepository.save(appuser);
+        return appuser;
+    }
 
     public Map<String, Long> getUserId(HttpServletRequest request)
     {
@@ -98,6 +97,30 @@ public class UserService {
         response.put("userId", appUser.getId());
         return response;
     }
+
+    public List<HockeyTeam> getUserTeams(HttpServletRequest request)
+    {
+        String token = request.getHeader(HEADER_STRING);
+
+        if (token == null)
+        {
+            throw new RuntimeException("token is null");
+        }
+        SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
+        // parse the token.
+        String userName = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                .getBody()
+                .getSubject();
+
+        AppUser appUser = userRepository.findByUserName(userName);
+
+        List<HockeyTeam> response = appUser.getTeamIds();
+
+        return response;
+    }
+
 //    public Boolean checkUser(String username, String password) {
 //        List<AppUser> appUsers = userRepository.findAll();
 //        for (AppUser appUser :

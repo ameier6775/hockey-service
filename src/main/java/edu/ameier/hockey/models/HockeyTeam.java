@@ -15,12 +15,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "team")
 public class HockeyTeam {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true)
-    private Long id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Column(name = "id", unique = true)
+//    private Long id;
 
-    @Column(name = "team_id")
+    @Id
+    @Column(name = "team_id", unique = true)
     private Long teamId;
 
 }
