@@ -1,17 +1,36 @@
 package edu.ameier.hockey.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ameier.hockey.dto.NHLTeamResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 @Service
+@Slf4j
 public class HockeyTeamService {
     private RestTemplateService restTemplateService;
+    private ObjectMapper mapper;
 
-    public HockeyTeamService(RestTemplateService restTemplateService) {
+    public HockeyTeamService(RestTemplateService restTemplateService, ObjectMapper mapper) {
         this.restTemplateService = restTemplateService;
+        this.mapper = mapper;
     }
 
     public String getTeams() {
         final String url = "http://statsapi.web.nhl.com/api/v1/teams";
+        String response = restTemplateService.getHttpRestResponse(url);
+        try {
+
+        NHLTeamResponseDto teams = mapper.readValue(response, NHLTeamResponseDto.class);
+        log.info(teams.toString());
+        }
+        catch (IOException exception)
+        {
+            log.error(exception.getMessage());
+
+        }
         return restTemplateService.getHttpRestResponse(url);
     }
 

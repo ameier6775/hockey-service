@@ -1,5 +1,7 @@
 package edu.ameier.hockey.models;
 
+import edu.ameier.hockey.repositories.UserRepository;
+import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,8 +9,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+
+import static edu.ameier.hockey.security.SecurityConstants.*;
 
 @Data
 @AllArgsConstructor

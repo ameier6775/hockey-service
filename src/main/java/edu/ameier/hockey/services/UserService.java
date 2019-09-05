@@ -41,14 +41,32 @@ public class UserService {
     public AppUser addTeamToFavorites(TeamFavorite teamFavorite) {
         AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
 
-        if(appuser.getTeamIds().isEmpty()) {
+//        if (appuser.getTeamIds().contains(hockeyTeam)) {
+//
+//        }
+        if(appuser.getTeamIds().isEmpty() && teamRepository.existsById(teamFavorite.getTeamId())) {
+            List<HockeyTeam> favorites = new ArrayList<>();
+            HockeyTeam hockeyTeam = teamRepository.getOne(teamFavorite.getTeamId());
+            favorites.add(hockeyTeam);
+            appuser.setTeamIds(favorites);
+            return userRepository.save(appuser);
+        }
+
+        else if (teamRepository.existsById(teamFavorite.getTeamId())) {
+            List<HockeyTeam> favorites = appuser.getTeamIds();
+            HockeyTeam hockeyTeam = teamRepository.getOne(teamFavorite.getTeamId());
+            favorites.add(hockeyTeam);
+            appuser.setTeamIds(favorites);
+            return userRepository.save(appuser);
+
+        } else if (appuser.getTeamIds().isEmpty()) {
             List<HockeyTeam> favorites = new ArrayList<>();
             HockeyTeam favorite = new HockeyTeam();
             favorite.setTeamId(teamFavorite.getTeamId());
             teamRepository.save(favorite);
             favorites.add(favorite);
             appuser.setTeamIds(favorites);
-            userRepository.save(appuser);
+            return userRepository.save(appuser);
         }
         else {
             List<HockeyTeam> favorites = appuser.getTeamIds();
@@ -57,10 +75,9 @@ public class UserService {
             teamRepository.save(favorite);
             favorites.add(favorite);
             appuser.setTeamIds(favorites);
-            userRepository.save(appuser);
+            return userRepository.save(appuser);
         }
 
-        return appuser;
     }
 
     public AppUser removeTeamFromFavorites(TeamFavorite teamFavorite) {
