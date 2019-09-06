@@ -51,8 +51,7 @@ public class TeamService {
         return restTemplateService.getHttpRestResponse(url);
     }
 
-    public String getCup()
-    {
+    public String getCup() {
         final String url = "http://records.nhl.com/site/api/trophy";
         return restTemplateService.getHttpRestResponse(url);
     }
@@ -64,8 +63,8 @@ public class TeamService {
     }
 
     public String getTeamRosterById(Long id) {
-        String teamId = id.toString();
-        final String url = "http://statsapi.web.nhl.com/api/v1/teams/" + teamId + "?expand=team.roster";
+        String rosterId = id.toString();
+        final String url = "http://statsapi.web.nhl.com/api/v1/teams/" + rosterId + "?expand=team.roster";
         return restTemplateService.getHttpRestResponse(url);
     }
 
@@ -106,6 +105,7 @@ public class TeamService {
             return userRepository.save(appuser);
         }
     }
+
     public AppUser removeTeamFromFavorites(TeamFavorite teamFavorite) {
         AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
         List<HockeyTeam> favorites = appuser.getTeamIds();
@@ -117,8 +117,7 @@ public class TeamService {
         return appuser;
     }
 
-    public List<HockeyTeam> getUserTeams(HttpServletRequest request)
-    {
+    public List<HockeyTeam> getUserTeams(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
 
         if (token == null)
@@ -126,7 +125,7 @@ public class TeamService {
             throw new RuntimeException("token is null");
         }
         SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
-        // parse the token.
+        // Parsing the token
         String userName = Jwts.parser()
                 .setSigningKey(key)
                 .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
@@ -134,15 +133,6 @@ public class TeamService {
                 .getSubject();
 
         AppUser appUser = userRepository.findByUserName(userName);
-
-        List<HockeyTeam> response = appUser.getTeamIds();
-
-        return response;
+        return appUser.getTeamIds();
     }
-
-
-
-
-
-
 }

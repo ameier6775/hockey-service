@@ -1,7 +1,13 @@
 package edu.ameier.hockey.controller;
 
+import edu.ameier.hockey.dto.PlayerFavorite;
+import edu.ameier.hockey.models.AppUser;
+import edu.ameier.hockey.models.Player;
 import edu.ameier.hockey.services.PlayerService;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -15,5 +21,29 @@ public class PlayerController {
 
     @GetMapping("/team/player/{id}")
     public String getPlayerById(@PathVariable("id") Long id) {return playerService.getPlayerById(id); }
+
+
+    @PostMapping("/user/player")
+    public AppUser addPlayer(@RequestBody PlayerFavorite playerFavorite) {
+        if (playerFavorite.getPlayerId() == null ||  playerFavorite.getUserId() == null) {
+            throw new RuntimeException("No id sent");
+        }
+        return playerService.addPlayerToFavorites(playerFavorite);
+    }
+
+    @PatchMapping("/user/player/delete")
+    public AppUser deletePlayer(@RequestBody PlayerFavorite playerFavorite) {
+        if (playerFavorite.getPlayerId() == null ||  playerFavorite.getUserId() == null) {
+            throw new RuntimeException("No id sent");
+        }
+        return playerService.removePlayerFromFavorites(playerFavorite);
+    }
+
+    @GetMapping("/user/id/players")
+    public List<Player> getPlayersForUser(HttpServletRequest request)
+    {
+        return playerService.getUserPlayers(request);
+    }
+
 
 }

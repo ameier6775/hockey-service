@@ -43,66 +43,24 @@ public class UserService {
         return userRepository.save(appUser);
     }
 
-
-    public AppUser addPlayerToFavorites(PlayerFavorite playerFavorite) {
-        AppUser appuser = userRepository.findById(playerFavorite.getUserId()).orElseThrow(RuntimeException::new);
-
-        if(appuser.getPlayerIds().isEmpty() && playerRepository.existsById(playerFavorite.getPlayerId())) {
-            List<Player> favorites = new ArrayList<>();
-            Player player = playerRepository.getOne(playerFavorite.getPlayerId());
-            favorites.add(player);
-            appuser.setPlayerIds(favorites);
-            return userRepository.save(appuser);
-        }
-
-        else if (playerRepository.existsById(playerFavorite.getPlayerId())) {
-            List<Player> favorites = appuser.getPlayerIds();
-            Player player = playerRepository.getOne(playerFavorite.getPlayerId());
-            favorites.add(player);
-            appuser.setPlayerIds(favorites);
-            return userRepository.save(appuser);
-
-        } else if (appuser.getPlayerIds().isEmpty()) {
-            List<Player> favorites = new ArrayList<>();
-            Player player = new Player();
-            player.setPlayerId(playerFavorite.getPlayerId());
-            playerRepository.save(player);
-            favorites.add(player);
-            appuser.setPlayerIds(favorites);
-            return userRepository.save(appuser);
-        }
-        else {
-            List<Player> favorites = appuser.getPlayerIds();
-            Player player = new Player();
-            player.setPlayerId(playerFavorite.getPlayerId());
-            playerRepository.save(player);
-            favorites.add(player);
-            appuser.setPlayerIds(favorites);
-            return userRepository.save(appuser);
-        }
-
-    }
-
-    public Map<String, Long> getUserId(HttpServletRequest request)
-    {
+    public Map<String, Long> getUserId(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
 
         if (token == null)
         {
             throw new RuntimeException("token is null");
         }
-            SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
-            // parse the token.
-            String userName = Jwts.parser()
-                    .setSigningKey(key)
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody()
-                    .getSubject();
+        SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
+        // Parsing the token
+        String userName = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                .getBody()
+                .getSubject();
 
-            AppUser appUser = userRepository.findByUserName(userName);
+        AppUser appUser = userRepository.findByUserName(userName);
 
         Map<String, Long> response = new HashMap<>();
-
         response.put("userId", appUser.getId());
         return response;
     }
