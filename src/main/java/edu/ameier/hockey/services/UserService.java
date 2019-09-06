@@ -1,8 +1,11 @@
 package edu.ameier.hockey.services;
 
+import edu.ameier.hockey.dto.PlayerFavorite;
 import edu.ameier.hockey.dto.TeamFavorite;
 import edu.ameier.hockey.models.AppUser;
 import edu.ameier.hockey.models.HockeyTeam;
+import edu.ameier.hockey.models.Player;
+import edu.ameier.hockey.repositories.PlayerRepository;
 import edu.ameier.hockey.repositories.TeamRepository;
 import edu.ameier.hockey.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -26,10 +29,12 @@ public class UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private TeamRepository teamRepository;
+    private PlayerRepository playerRepository;
 
-    public UserService(UserRepository userRepository, TeamRepository teamRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository, PlayerRepository playerRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
+        this.playerRepository = playerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -38,57 +43,44 @@ public class UserService {
         return userRepository.save(appUser);
     }
 
-    public AppUser addTeamToFavorites(TeamFavorite teamFavorite) {
-        AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
 
-//        if (appuser.getTeamIds().contains(hockeyTeam)) {
-//
-//        }
-        if(appuser.getTeamIds().isEmpty() && teamRepository.existsById(teamFavorite.getTeamId())) {
-            List<HockeyTeam> favorites = new ArrayList<>();
-            HockeyTeam hockeyTeam = teamRepository.getOne(teamFavorite.getTeamId());
-            favorites.add(hockeyTeam);
-            appuser.setTeamIds(favorites);
+    public AppUser addPlayerToFavorites(PlayerFavorite playerFavorite) {
+        AppUser appuser = userRepository.findById(playerFavorite.getUserId()).orElseThrow(RuntimeException::new);
+
+        if(appuser.getPlayerIds().isEmpty() && playerRepository.existsById(playerFavorite.getPlayerId())) {
+            List<Player> favorites = new ArrayList<>();
+            Player player = playerRepository.getOne(playerFavorite.getPlayerId());
+            favorites.add(player);
+            appuser.setPlayerIds(favorites);
             return userRepository.save(appuser);
         }
 
-        else if (teamRepository.existsById(teamFavorite.getTeamId())) {
-            List<HockeyTeam> favorites = appuser.getTeamIds();
-            HockeyTeam hockeyTeam = teamRepository.getOne(teamFavorite.getTeamId());
-            favorites.add(hockeyTeam);
-            appuser.setTeamIds(favorites);
+        else if (playerRepository.existsById(playerFavorite.getPlayerId())) {
+            List<Player> favorites = appuser.getPlayerIds();
+            Player player = playerRepository.getOne(playerFavorite.getPlayerId());
+            favorites.add(player);
+            appuser.setPlayerIds(favorites);
             return userRepository.save(appuser);
 
-        } else if (appuser.getTeamIds().isEmpty()) {
-            List<HockeyTeam> favorites = new ArrayList<>();
-            HockeyTeam favorite = new HockeyTeam();
-            favorite.setTeamId(teamFavorite.getTeamId());
-            teamRepository.save(favorite);
-            favorites.add(favorite);
-            appuser.setTeamIds(favorites);
+        } else if (appuser.getPlayerIds().isEmpty()) {
+            List<Player> favorites = new ArrayList<>();
+            Player player = new Player();
+            player.setPlayerId(playerFavorite.getPlayerId());
+            playerRepository.save(player);
+            favorites.add(player);
+            appuser.setPlayerIds(favorites);
             return userRepository.save(appuser);
         }
         else {
-            List<HockeyTeam> favorites = appuser.getTeamIds();
-            HockeyTeam favorite = new HockeyTeam();
-            favorite.setTeamId(teamFavorite.getTeamId());
-            teamRepository.save(favorite);
-            favorites.add(favorite);
-            appuser.setTeamIds(favorites);
+            List<Player> favorites = appuser.getPlayerIds();
+            Player player = new Player();
+            player.setPlayerId(playerFavorite.getPlayerId());
+            playerRepository.save(player);
+            favorites.add(player);
+            appuser.setPlayerIds(favorites);
             return userRepository.save(appuser);
         }
 
-    }
-
-    public AppUser removeTeamFromFavorites(TeamFavorite teamFavorite) {
-        AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
-        List<HockeyTeam> favorites = appuser.getTeamIds();
-        HockeyTeam favorite = teamRepository.getOne(teamFavorite.getTeamId());
-        favorites.remove(favorite);
-        teamRepository.delete(favorite);
-        appuser.setTeamIds(favorites);
-        userRepository.save(appuser);
-        return appuser;
     }
 
     public Map<String, Long> getUserId(HttpServletRequest request)
@@ -115,39 +107,5 @@ public class UserService {
         return response;
     }
 
-    public List<HockeyTeam> getUserTeams(HttpServletRequest request)
-    {
-        String token = request.getHeader(HEADER_STRING);
 
-        if (token == null)
-        {
-            throw new RuntimeException("token is null");
-        }
-        SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
-        // parse the token.
-        String userName = Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                .getBody()
-                .getSubject();
-
-        AppUser appUser = userRepository.findByUserName(userName);
-
-        List<HockeyTeam> response = appUser.getTeamIds();
-
-        return response;
-    }
-
-//    public Boolean checkUser(String username, String password) {
-//        List<AppUser> appUsers = userRepository.findAll();
-//        for (AppUser appUser :
-//                appUsers) {
-//            String name = appUser.getUserName();
-//            String secret = appUser.getPassword();
-//            if (name.equals(username) && secret.equals(password)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
     }
