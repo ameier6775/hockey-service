@@ -29,6 +29,9 @@ public class TeamController {
         return teamService.getTeamById(id);
     }
 
+    @GetMapping("team/stats/{id}")
+    public String getTeamStats(@PathVariable("id") Long id) {return teamService.getTeamStats(id); }
+
     @GetMapping("/team/{id}/roster")
     public String getTeamRosterById(@PathVariable("id") Long id) {
         return teamService.getTeamRosterById(id);

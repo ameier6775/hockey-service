@@ -51,6 +51,12 @@ public class TeamService {
         return restTemplateService.getHttpRestResponse(url);
     }
 
+    public String getTeamStats(Long id) {
+        String teamId = id.toString();
+        final String url = "http://statsapi.web.nhl.com/api/v1/teams/" + teamId + "/stats";
+        return restTemplateService.getHttpRestResponse(url);
+    }
+
     public String getCup() {
         final String url = "http://records.nhl.com/site/api/trophy";
         return restTemplateService.getHttpRestResponse(url);
