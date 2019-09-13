@@ -1,4 +1,4 @@
-package edu.ameier.hockey.dto;
+package edu.ameier.hockey.dto.nhl;
 
 import lombok.Data;
 

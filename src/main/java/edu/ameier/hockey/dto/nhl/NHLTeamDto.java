@@ -1,6 +1,9 @@
-package edu.ameier.hockey.dto;
+package edu.ameier.hockey.dto.nhl;
 
 import lombok.Data;
+
+import java.util.List;
+
 
 @Data
 public class NHLTeamDto {
@@ -13,8 +16,9 @@ public class NHLTeamDto {
     private String locationName;
     private long firstYearOfPlay;
     private NHLTeamDivisionDto division;
-    private NHLConferenceDto conference;
+    private NHLTeamConferenceDto conference;
     private String shortName;
     private String officialSiteUrl;
     private long franchiseId;
+    private List<NHLTeamStatsDto> nhlTeamStatsDto;
 }

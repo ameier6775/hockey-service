@@ -1,8 +1,11 @@
 package edu.ameier.hockey.controller;
 
+import edu.ameier.hockey.dto.UserTeamDto;
+import edu.ameier.hockey.dto.nhl.NHLTeamDto;
+import edu.ameier.hockey.dto.nhl.NHLTeamStatsInfoDto;
 import edu.ameier.hockey.dto.TeamFavorite;
+import edu.ameier.hockey.dto.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;
-import edu.ameier.hockey.models.HockeyTeam;
 import edu.ameier.hockey.services.TeamService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +23,17 @@ public class TeamController {
     }
 
     @GetMapping("/teams")
-    public String getTeams() {
-        return teamService.getTeams();
+    public List<UserTeamsDto> getTeams(HttpServletRequest request) {
+        return teamService.getTeams(request);
     }
 
     @GetMapping("/team/{id}")
-    public String getTeamById(@PathVariable("id") Long id) {
-        return teamService.getTeamById(id);
+    public UserTeamDto getTeamById(@PathVariable("id") Long id, HttpServletRequest request) {
+        return teamService.getTeamById(id, request);
     }
 
-    @GetMapping("team/stats/{id}")
-    public String getTeamStats(@PathVariable("id") Long id) {return teamService.getTeamStats(id); }
+//    @GetMapping("/team/stats/{id}")
+//    public String getTeamStats(@PathVariable("id") Long id) {return teamService.getTeamStats(id); }
 
     @GetMapping("/team/{id}/roster")
     public String getTeamRosterById(@PathVariable("id") Long id) {
@@ -53,11 +56,11 @@ public class TeamController {
         return teamService.removeTeamFromFavorites(teamFavorite);
     }
 
-    @GetMapping("/user/id/teams")
-    public List<HockeyTeam> getTeamsForUser(HttpServletRequest request)
-    {
-        return teamService.getUserTeams(request);
-    }
+//    @GetMapping("/user/id/teams")
+//    public List<HockeyTeam> getTeamsForUser(HttpServletRequest request)
+//    {
+//        return teamService.getUserTeams(request);
+//    }
 
     @GetMapping("/stanley")
     public String stanleyCupWinners()

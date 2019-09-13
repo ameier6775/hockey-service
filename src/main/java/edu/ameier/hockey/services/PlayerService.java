@@ -36,11 +36,11 @@ public class PlayerService {
         return restTemplateService.getHttpRestResponse(url);
     }
 
-//    public String getPlayerStats(Long id) {
-//        String playerId = id.toString();
-//        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats";
-//        return restTemplateService.getHttpRestResponse(url);
-//    }
+    public String getPlayerStats(Long id) {
+        String playerId = id.toString();
+        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
+        return restTemplateService.getHttpRestResponse(url);
+    }
 
     public AppUser addPlayerToFavorites(PlayerFavorite playerFavorite) {
         AppUser appuser = userRepository.findById(playerFavorite.getUserId()).orElseThrow(RuntimeException::new);

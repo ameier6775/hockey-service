@@ -22,8 +22,8 @@ public class PlayerController {
     @GetMapping("/team/player/{id}")
     public String getPlayerById(@PathVariable("id") Long id) {return playerService.getPlayerById(id); }
 
-//    @GetMapping("user/player/{id}/stats")
-//    public String getPlayerStats(@PathVariable("id") Long id) {return playerService.getPlayerStats(id); }
+    @GetMapping("/user/player/{id}/stats")
+    public String getPlayerStats(@PathVariable("id") Long id) {return playerService.getPlayerStats(id); }
 
     @PostMapping("/user/player")
     public AppUser addPlayer(@RequestBody PlayerFavorite playerFavorite) {
