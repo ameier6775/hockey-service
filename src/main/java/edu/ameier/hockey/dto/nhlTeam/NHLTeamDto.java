@@ -1,5 +1,6 @@
-package edu.ameier.hockey.dto.nhl;
+package edu.ameier.hockey.dto.nhlTeam;
 
+import edu.ameier.hockey.dto.nhlPlayer.NHLRosterDto;
 import lombok.Data;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public class NHLTeamDto {
     private String officialSiteUrl;
     private long franchiseId;
     private List<NHLTeamStatsDto> nhlTeamStatsDto;
+    private NHLRosterDto roster;
 }

@@ -2,7 +2,8 @@ package edu.ameier.hockey.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ameier.hockey.dto.UserTeamDto;
-import edu.ameier.hockey.dto.nhl.*;
+import edu.ameier.hockey.dto.nhlPlayer.NHLRosterDto;
+import edu.ameier.hockey.dto.nhlTeam.*;
 import edu.ameier.hockey.dto.TeamFavorite;
 import edu.ameier.hockey.dto.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;
@@ -92,17 +93,17 @@ public class TeamService {
         String teamId = id.toString();
         final String teamStatsUrl = "http://statsapi.web.nhl.com/api/v1/teams/" + teamId + "?expand=team.stats";
         String teamStatsResponse = restTemplateService.getHttpRestResponse(teamStatsUrl);
-        final String roosterUrl = "http://statsapi.web.nhl.com/api/v1/teams/" + teamId + "?expand=team.roster";
-        String teamRooster = restTemplateService.getHttpRestResponse(roosterUrl);
+        final String rosterUrl = "http://statsapi.web.nhl.com/api/v1/teams/" + teamId + "?expand=team.roster";
+        String teamRoster = restTemplateService.getHttpRestResponse(rosterUrl);
 
         AppUser appUser = getAppUserFromRequest(request);
         NHLTeamStatsInfoDto team = new NHLTeamStatsInfoDto();
-        NHLTeamResponseDto withRooster = new NHLTeamResponseDto();
+        NHLTeamResponseDto withRoster = new NHLTeamResponseDto();
 
         try {
             team = mapper.readValue(teamStatsResponse, NHLTeamStatsInfoDto.class);
-            withRooster = mapper.readValue(teamRooster, NHLTeamResponseDto.class);
-            log.info(withRooster.toString());
+            withRoster = mapper.readValue(teamRoster, NHLTeamResponseDto.class);
+            log.info(withRoster.toString());
 
         }
         catch (IOException exception)
@@ -111,9 +112,14 @@ public class TeamService {
         }
 
         UserTeamDto userTeam = new UserTeamDto();
+        
         NHLTeamStatsTeamDto statTeam  = team.getTeams().get(0);
         NHLTeamStatsStatDto teamsLatestStats = statTeam.getTeamStats().get(0).getSplits().get(0).getStat();
         NHLTeamStatsStatDto teamsSeasonRankingStats = statTeam.getTeamStats().get(0).getSplits().get(1).getStat();
+
+        NHLRosterDto roster = withRoster.getTeams().get(0).getRoster();
+
+        userTeam.setRoster(roster.getRoster());
 
         userTeam.setId(statTeam.getId());
         userTeam.setName(statTeam.getName());

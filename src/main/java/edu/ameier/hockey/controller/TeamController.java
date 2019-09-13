@@ -1,8 +1,6 @@
 package edu.ameier.hockey.controller;
 
 import edu.ameier.hockey.dto.UserTeamDto;
-import edu.ameier.hockey.dto.nhl.NHLTeamDto;
-import edu.ameier.hockey.dto.nhl.NHLTeamStatsInfoDto;
 import edu.ameier.hockey.dto.TeamFavorite;
 import edu.ameier.hockey.dto.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;

@@ -1,4 +1,4 @@
-package edu.ameier.hockey.dto.nhl;
+package edu.ameier.hockey.dto.nhlTeam;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NHLTeamStatsTypeDto {
-    private String displayName;
+public class NHLTeamFranchiseDto {
+    private long franchiseId;
+    private String teamName;
 }

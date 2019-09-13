@@ -1,6 +1,5 @@
-package edu.ameier.hockey.dto.nhl;
+package edu.ameier.hockey.dto.nhlTeam;
 
-import edu.ameier.hockey.dto.nhl.NHLTeamDto;
 import lombok.Data;
 
 import java.util.List;

@@ -1,8 +1,11 @@
 package edu.ameier.hockey.dto;
 
+import edu.ameier.hockey.dto.nhlPlayer.NHLPlayersDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,4 +35,5 @@ public class UserTeamDto {
     String penaltyKillRank;
     String savePctgRank;
     String faceOffsRank;
+    List<NHLPlayersDto> roster;
 }
