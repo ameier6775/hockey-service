@@ -1,6 +1,8 @@
 package edu.ameier.hockey.controller;
 
 import edu.ameier.hockey.dto.PlayerFavorite;
+import edu.ameier.hockey.dto.nhlPlayer.PlayerResponseDto;
+import edu.ameier.hockey.dto.nhlPlayer.PlayerStatsGeneralDto;
 import edu.ameier.hockey.models.AppUser;
 import edu.ameier.hockey.models.Player;
 import edu.ameier.hockey.services.PlayerService;
@@ -19,11 +21,11 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping("/team/player/{id}")
-    public String getPlayerById(@PathVariable("id") Long id) {return playerService.getPlayerById(id); }
+//    @GetMapping("/team/player/{id}")
+//    public String getPlayerById(@PathVariable("id") Long id) {return playerService.getPlayerById(id); }
 
     @GetMapping("/user/player/{id}/stats")
-    public String getPlayerStats(@PathVariable("id") Long id) {return playerService.getPlayerStats(id); }
+    public PlayerResponseDto getPlayerStats(@PathVariable("id") Long id, HttpServletRequest request) {return playerService.getPlayerStats(id, request); }
 
     @PostMapping("/user/player")
     public AppUser addPlayer(@RequestBody PlayerFavorite playerFavorite) {
@@ -41,12 +43,10 @@ public class PlayerController {
         return playerService.removePlayerFromFavorites(playerFavorite);
     }
 
-    @GetMapping("/user/id/players")
-    public List<Player> getPlayersForUser(HttpServletRequest request)
-    {
-        return playerService.getUserPlayers(request);
-    }
-
-
+//    @GetMapping("/user/id/players")
+//    public List<PlayerStatsGeneralDto> getPlayersForUser(HttpServletRequest request)
+//    {
+//        return playerService.getUserPlayers(request);
+//    }
 
 }

@@ -1,15 +1,14 @@
-package edu.ameier.hockey.dto;
+package edu.ameier.hockey.dto.nhlPlayer;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class PlayerDto {
-    private long id;
+public class PlayerTeamDto {
+    private int id;
     private String name;
+    private String link;
 }

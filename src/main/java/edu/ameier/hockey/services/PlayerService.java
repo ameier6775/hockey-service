@@ -1,6 +1,8 @@
 package edu.ameier.hockey.services;
 
 import edu.ameier.hockey.dto.PlayerFavorite;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ameier.hockey.dto.nhlPlayer.*;
 import edu.ameier.hockey.models.AppUser;
 import edu.ameier.hockey.models.Player;
 import edu.ameier.hockey.repositories.PlayerRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,25 +24,94 @@ import static edu.ameier.hockey.security.SecurityConstants.*;
 @Service
 public class PlayerService {
     private RestTemplateService restTemplateService;
+    private ObjectMapper mapper;
     private UserRepository userRepository;
     private PlayerRepository playerRepository;
 
-    public PlayerService(RestTemplateService restTemplateService, UserRepository userRepository, PlayerRepository playerRepository) {
+    public PlayerService(RestTemplateService restTemplateService, UserRepository userRepository, PlayerRepository playerRepository, ObjectMapper mapper) {
         this.restTemplateService = restTemplateService;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
+        this.mapper = mapper;
     }
 
-    public String getPlayerById(Long id) {
-        String playerId = id.toString();
-        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId;
-        return restTemplateService.getHttpRestResponse(url);
-    }
+//    public String getPlayerById(Long id) {
+//        String playerId = id.toString();
+//        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId;
+//        return restTemplateService.getHttpRestResponse(url);
+//    }
+//
+//    public String getPlayerStats(Long id) {
+//        String playerId = id.toString();
+//        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
+//        return restTemplateService.getHttpRestResponse(url);
+//    }
 
-    public String getPlayerStats(Long id) {
+    public PlayerResponseDto getPlayerStats(Long id, HttpServletRequest request) {
         String playerId = id.toString();
-        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
-        return restTemplateService.getHttpRestResponse(url);
+        final String generalInfoUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId;
+        String playerInfoResponse = restTemplateService.getHttpRestResponse(generalInfoUrl);
+        final String statsUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
+        String playerStatsResponse = restTemplateService.getHttpRestResponse(statsUrl);
+
+//        AppUser appUser = getAppUserFromRequest(request);
+        PlayerStatsGeneralDto playerStats = new PlayerStatsGeneralDto();
+        PlayerInfoDto playerInfo = new PlayerInfoDto();
+
+        try {
+            playerInfo = mapper.readValue(playerInfoResponse, PlayerInfoDto.class);
+            playerStats = mapper.readValue(playerStatsResponse, PlayerStatsGeneralDto.class);
+            log.info(playerStats.toString());
+        }
+
+        catch (IOException exception)
+        {
+            log.error(exception.getMessage());
+        }
+
+        PlayerResponseDto player = new PlayerResponseDto();
+
+        PeopleDto info = playerInfo.getPeople().get(0);
+        PlayerStatsStatDto stats = playerStats.getStats().get(0).getSplits().get(0).getStat();
+
+        player.setId(info.getId());
+        player.setFullName(info.getFullName());
+        player.setPrimaryNumber(info.getPrimaryNumber());
+        player.setCurrentTeam(info.getCurrentTeam().getName());
+        player.setPosition(info.getPrimaryPosition().getName());
+        player.setCaptain(info.isCaptain());
+        player.setAlternateCaptain(info.isAlternateCaptain());
+        player.setBirthDate(info.getBirthDate());
+        player.setBirthCity(info.getBirthCity());
+        player.setBirthCountry(info.getBirthCountry());
+        player.setBirthStateProvince(info.getBirthStateProvince());
+        player.setCurrentAge(info.getCurrentAge());
+        player.setNationality(info.getNationality());
+        player.setHeight(info.getHeight());
+        player.setWeight(info.getWeight());
+        player.setRookie(info.isRookie());
+        player.setShootsCatches(info.getShootsCatches());
+
+        player.setGames(stats.getGames());
+        player.setGoals(stats.getGoals());
+        player.setAssists(stats.getAssists());
+        player.setPoints(stats.getPoints());
+        player.setHits(stats.getHits());
+        player.setTimeOnIcePerGame(stats.getTimeOnIcePerGame());
+        player.setPim(stats.getPim());
+        player.setBlocks(stats.getBlocked());
+        player.setShots(stats.getShots());
+        player.setPowerPlayGoals(stats.getPowerPlayGoals());
+        player.setPowerPlayPoints(stats.getPowerPlayPoints());
+        player.setPenaltyMinutes(stats.getPenaltyMinutes());
+        player.setShotPct(stats.getShotPct());
+        player.setGameWinningGoals(stats.getGameWinningGoals());
+        player.setOverTimeGoals(stats.getOverTimeGoals());
+        player.setShortHandedGoals(stats.getShortHandedGoals());
+        player.setShortHandedPoints(stats.getShortHandedPoints());
+        player.setPlusMinus(stats.getPlusMinus());
+
+        return player;
     }
 
     public AppUser addPlayerToFavorites(PlayerFavorite playerFavorite) {
@@ -79,6 +151,7 @@ public class PlayerService {
             return userRepository.save(appuser);
         }
     }
+
     public AppUser removePlayerFromFavorites(PlayerFavorite playerFavorite) {
         AppUser appuser = userRepository.findById(playerFavorite.getUserId()).orElseThrow(RuntimeException::new);
         List<Player> favorites = appuser.getPlayerIds();
@@ -89,7 +162,24 @@ public class PlayerService {
         userRepository.save(appuser);
         return appuser;
     }
-    public List<Player> getUserPlayers(HttpServletRequest request) {
+
+//    public List<PlayerStatsGeneralDto> getUserPlayers(HttpServletRequest request) {
+//
+//        AppUser appUser = getAppUserFromRequest(request);
+//
+//        List<Player> players = appUser.getPlayerIds();
+//        List<PlayerStatsGeneralDto> favPlayers = new ArrayList<>();
+//        for (Player player :
+//                players) {
+//            long playerId = player.getPlayerId();
+//            PlayerStatsGeneralDto info = getPlayerStats(playerId);
+//            favPlayers.add(info);
+//        }
+//        return favPlayers;
+//    }
+
+    private AppUser getAppUserFromRequest(HttpServletRequest request)
+    {
         String token = request.getHeader(HEADER_STRING);
 
         if (token == null)
@@ -104,7 +194,7 @@ public class PlayerService {
                 .getBody()
                 .getSubject();
 
-        AppUser appUser = userRepository.findByUserName(userName);
-        return appUser.getPlayerIds();
+        return userRepository.findByUserName(userName);
     }
+
 }

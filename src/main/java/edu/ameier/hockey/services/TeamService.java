@@ -1,11 +1,11 @@
 package edu.ameier.hockey.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ameier.hockey.dto.UserTeamDto;
+import edu.ameier.hockey.dto.nhlTeam.UserTeamDto;
 import edu.ameier.hockey.dto.nhlPlayer.NHLRosterDto;
 import edu.ameier.hockey.dto.nhlTeam.*;
-import edu.ameier.hockey.dto.TeamFavorite;
-import edu.ameier.hockey.dto.UserTeamsDto;
+import edu.ameier.hockey.dto.nhlTeam.TeamFavorite;
+import edu.ameier.hockey.dto.nhlTeam.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;
 import edu.ameier.hockey.models.HockeyTeam;
 import edu.ameier.hockey.repositories.TeamRepository;
@@ -77,13 +77,6 @@ public class TeamService {
         return userTeams;
     }
 
-//    public String getTeamStats(Long id) {
-//        String teamId = id.toString();
-////        https://statsapi.web.nhl.com/api/v1/teams/4?expand=team.stats
-//        final String url = "http://statsapi.web.nhl.com/api/v1/teams/" + teamId + "/stats";
-//        return restTemplateService.getHttpRestResponse(url);
-//    }
-
     public String getCup() {
         final String url = "http://records.nhl.com/site/api/trophy";
         return restTemplateService.getHttpRestResponse(url);
@@ -112,7 +105,7 @@ public class TeamService {
         }
 
         UserTeamDto userTeam = new UserTeamDto();
-        
+
         NHLTeamStatsTeamDto statTeam  = team.getTeams().get(0);
         NHLTeamStatsStatDto teamsLatestStats = statTeam.getTeamStats().get(0).getSplits().get(0).getStat();
         NHLTeamStatsStatDto teamsSeasonRankingStats = statTeam.getTeamStats().get(0).getSplits().get(1).getStat();
@@ -205,6 +198,7 @@ public class TeamService {
         return appuser;
     }
 
+    //Delete this?
 //    public List<HockeyTeam> getUserTeams(HttpServletRequest request) {
 //        String token = request.getHeader(HEADER_STRING);
 //

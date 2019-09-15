@@ -1,10 +1,6 @@
 package edu.ameier.hockey.services;
 
-import edu.ameier.hockey.dto.PlayerFavorite;
-import edu.ameier.hockey.dto.TeamFavorite;
 import edu.ameier.hockey.models.AppUser;
-import edu.ameier.hockey.models.HockeyTeam;
-import edu.ameier.hockey.models.Player;
 import edu.ameier.hockey.repositories.PlayerRepository;
 import edu.ameier.hockey.repositories.TeamRepository;
 import edu.ameier.hockey.repositories.UserRepository;
@@ -16,9 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static edu.ameier.hockey.security.SecurityConstants.*;
@@ -64,6 +58,7 @@ public class UserService {
         response.put("userId", appUser.getId());
         return response;
     }
+
 
 
     }

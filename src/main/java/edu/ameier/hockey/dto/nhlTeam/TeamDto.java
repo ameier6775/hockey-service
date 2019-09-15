@@ -1,4 +1,4 @@
-package edu.ameier.hockey.dto;
+package edu.ameier.hockey.dto.nhlTeam;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

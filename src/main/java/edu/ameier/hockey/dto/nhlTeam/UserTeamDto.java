@@ -1,4 +1,4 @@
-package edu.ameier.hockey.dto;
+package edu.ameier.hockey.dto.nhlTeam;
 
 import edu.ameier.hockey.dto.nhlPlayer.NHLPlayersDto;
 import lombok.AllArgsConstructor;

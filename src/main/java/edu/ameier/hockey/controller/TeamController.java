@@ -1,8 +1,8 @@
 package edu.ameier.hockey.controller;
 
-import edu.ameier.hockey.dto.UserTeamDto;
-import edu.ameier.hockey.dto.TeamFavorite;
-import edu.ameier.hockey.dto.UserTeamsDto;
+import edu.ameier.hockey.dto.nhlTeam.UserTeamDto;
+import edu.ameier.hockey.dto.nhlTeam.TeamFavorite;
+import edu.ameier.hockey.dto.nhlTeam.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;
 import edu.ameier.hockey.services.TeamService;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +30,6 @@ public class TeamController {
         return teamService.getTeamById(id, request);
     }
 
-//    @GetMapping("/team/stats/{id}")
-//    public String getTeamStats(@PathVariable("id") Long id) {return teamService.getTeamStats(id); }
-
     @GetMapping("/team/{id}/roster")
     public String getTeamRosterById(@PathVariable("id") Long id) {
         return teamService.getTeamRosterById(id);
@@ -54,6 +51,7 @@ public class TeamController {
         return teamService.removeTeamFromFavorites(teamFavorite);
     }
 
+    //Delete this?
 //    @GetMapping("/user/id/teams")
 //    public List<HockeyTeam> getTeamsForUser(HttpServletRequest request)
 //    {
