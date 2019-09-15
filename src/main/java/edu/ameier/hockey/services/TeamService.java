@@ -199,24 +199,17 @@ public class TeamService {
     }
 
     //Delete this?
-//    public List<HockeyTeam> getUserTeams(HttpServletRequest request) {
-//        String token = request.getHeader(HEADER_STRING);
-//
-//        if (token == null)
-//        {
-//            throw new RuntimeException("token is null");
-//        }
-//        SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA512");
-//        // Parsing the token
-//        String userName = Jwts.parser()
-//                .setSigningKey(key)
-//                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-//                .getBody()
-//                .getSubject();
-//
-//        AppUser appUser = userRepository.findByUserName(userName);
-//        return appUser.getTeamIds();
-//    }
+    public List<UserTeamDto> getUserTeams(HttpServletRequest request) {
+        AppUser appUser = getAppUserFromRequest(request);
+        List<HockeyTeam> teams  = appUser.getTeamIds();
+        List<UserTeamDto> favTeams = new ArrayList<>();
+        for (HockeyTeam team:
+             teams) {
+            long teamId = team.getTeamId();
+            favTeams.add(getTeamById(teamId, request));
+        }
+        return favTeams;
+    }
 
     private AppUser getAppUserFromRequest(HttpServletRequest request)
     {

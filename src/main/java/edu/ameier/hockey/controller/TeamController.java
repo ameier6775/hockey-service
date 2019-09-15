@@ -4,6 +4,7 @@ import edu.ameier.hockey.dto.nhlTeam.UserTeamDto;
 import edu.ameier.hockey.dto.nhlTeam.TeamFavorite;
 import edu.ameier.hockey.dto.nhlTeam.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;
+import edu.ameier.hockey.models.HockeyTeam;
 import edu.ameier.hockey.services.TeamService;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,12 +52,11 @@ public class TeamController {
         return teamService.removeTeamFromFavorites(teamFavorite);
     }
 
-    //Delete this?
-//    @GetMapping("/user/id/teams")
-//    public List<HockeyTeam> getTeamsForUser(HttpServletRequest request)
-//    {
-//        return teamService.getUserTeams(request);
-//    }
+    @GetMapping("/user/id/teams")
+    public List<UserTeamDto> getTeamsForUser(HttpServletRequest request)
+    {
+        return teamService.getUserTeams(request);
+    }
 
     @GetMapping("/stanley")
     public String stanleyCupWinners()
