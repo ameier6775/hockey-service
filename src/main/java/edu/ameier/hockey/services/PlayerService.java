@@ -35,18 +35,6 @@ public class PlayerService {
         this.mapper = mapper;
     }
 
-//    public String getPlayerById(Long id) {
-//        String playerId = id.toString();
-//        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId;
-//        return restTemplateService.getHttpRestResponse(url);
-//    }
-//
-//    public String getPlayerStats(Long id) {
-//        String playerId = id.toString();
-//        final String url = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
-//        return restTemplateService.getHttpRestResponse(url);
-//    }
-
     public PlayerResponseDto getPlayerStats(Long id, HttpServletRequest request) {
         String playerId = id.toString();
         final String generalInfoUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId;
@@ -54,7 +42,7 @@ public class PlayerService {
         final String statsUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
         String playerStatsResponse = restTemplateService.getHttpRestResponse(statsUrl);
 
-//        AppUser appUser = getAppUserFromRequest(request);
+        AppUser appUser = getAppUserFromRequest(request);
         PlayerStatsGeneralDto playerStats = new PlayerStatsGeneralDto();
         PlayerInfoDto playerInfo = new PlayerInfoDto();
 
@@ -73,6 +61,12 @@ public class PlayerService {
 
         PeopleDto info = playerInfo.getPeople().get(0);
         PlayerStatsStatDto stats = playerStats.getStats().get(0).getSplits().get(0).getStat();
+
+        for (Player playerFav: appUser.getPlayerIds()) {
+            if (playerFav.getPlayerId() == info.getId()) {
+                player.setFavorite(true);
+            }
+        }
 
         player.setId(info.getId());
         player.setFullName(info.getFullName());
@@ -162,21 +156,6 @@ public class PlayerService {
         userRepository.save(appuser);
         return appuser;
     }
-
-//    public List<PlayerStatsGeneralDto> getUserPlayers(HttpServletRequest request) {
-//
-//        AppUser appUser = getAppUserFromRequest(request);
-//
-//        List<Player> players = appUser.getPlayerIds();
-//        List<PlayerStatsGeneralDto> favPlayers = new ArrayList<>();
-//        for (Player player :
-//                players) {
-//            long playerId = player.getPlayerId();
-//            PlayerStatsGeneralDto info = getPlayerStats(playerId);
-//            favPlayers.add(info);
-//        }
-//        return favPlayers;
-//    }
 
     private AppUser getAppUserFromRequest(HttpServletRequest request)
     {

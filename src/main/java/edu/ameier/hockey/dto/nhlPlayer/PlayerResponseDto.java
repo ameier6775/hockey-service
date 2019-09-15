@@ -43,4 +43,5 @@ public class PlayerResponseDto {
     private int blocks;
     private String timeOnIcePerGame;
     private int hits;
+    private boolean favorite;
 }

@@ -2,14 +2,11 @@ package edu.ameier.hockey.controller;
 
 import edu.ameier.hockey.dto.PlayerFavorite;
 import edu.ameier.hockey.dto.nhlPlayer.PlayerResponseDto;
-import edu.ameier.hockey.dto.nhlPlayer.PlayerStatsGeneralDto;
 import edu.ameier.hockey.models.AppUser;
-import edu.ameier.hockey.models.Player;
 import edu.ameier.hockey.services.PlayerService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -20,9 +17,6 @@ public class PlayerController {
     public PlayerController(PlayerService playerService) {
         this.playerService = playerService;
     }
-
-//    @GetMapping("/team/player/{id}")
-//    public String getPlayerById(@PathVariable("id") Long id) {return playerService.getPlayerById(id); }
 
     @GetMapping("/user/player/{id}/stats")
     public PlayerResponseDto getPlayerStats(@PathVariable("id") Long id, HttpServletRequest request) {return playerService.getPlayerStats(id, request); }
@@ -42,11 +36,5 @@ public class PlayerController {
         }
         return playerService.removePlayerFromFavorites(playerFavorite);
     }
-
-//    @GetMapping("/user/id/players")
-//    public List<PlayerStatsGeneralDto> getPlayersForUser(HttpServletRequest request)
-//    {
-//        return playerService.getUserPlayers(request);
-//    }
 
 }
