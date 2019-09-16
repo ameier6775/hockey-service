@@ -22,13 +22,9 @@ import static edu.ameier.hockey.security.SecurityConstants.*;
 public class UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private TeamRepository teamRepository;
-    private PlayerRepository playerRepository;
 
-    public UserService(UserRepository userRepository, TeamRepository teamRepository, PlayerRepository playerRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.teamRepository = teamRepository;
-        this.playerRepository = playerRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 

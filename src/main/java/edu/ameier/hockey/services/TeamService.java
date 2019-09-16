@@ -128,13 +128,15 @@ public class TeamService {
         userTeam.setShotsPerGameRank(teamsSeasonRankingStats.getShotsPerGame());
         userTeam.setPowerPlayRank(teamsSeasonRankingStats.getPowerPlayPercentage());
         userTeam.setPenaltyKillRank(teamsSeasonRankingStats.getPenaltyKillPercentage());
-        userTeam.setSavePctgRank(teamsSeasonRankingStats.getSavePercentage());
         userTeam.setFaceOffsRank(teamsSeasonRankingStats.getFaceOffWinPercentage());
 
         userTeam.setWinNums(Integer.parseInt(teamsLatestStats.getWins()));
         userTeam.setLossNums(Integer.parseInt(teamsLatestStats.getLosses()));
         userTeam.setOtNums(Integer.parseInt(teamsLatestStats.getOt()));
         userTeam.setPtsNums(Integer.parseInt(teamsLatestStats.getPts()));
+        userTeam.setSavePct(Float.parseFloat(teamsLatestStats.getSavePctg()));
+        userTeam.setPowerPlayPct(Float.parseFloat(teamsLatestStats.getPowerPlayPercentage()));
+        userTeam.setPenaltyKillPct(Float.parseFloat(teamsLatestStats.getPenaltyKillPercentage()));
         userTeam.setGoalsPerGameNums(Float.parseFloat(teamsLatestStats.getGoalsPerGame()));
         userTeam.setGoalsAgainstPerGameNums(Float.parseFloat(teamsLatestStats.getGoalsAgainstPerGame()));
         userTeam.setShotsPerGameNums(Float.parseFloat(teamsLatestStats.getShotsPerGame()));
@@ -151,6 +153,8 @@ public class TeamService {
 
     public AppUser addTeamToFavorites(TeamFavorite teamFavorite) {
         AppUser appuser = userRepository.findById(teamFavorite.getUserId()).orElseThrow(RuntimeException::new);
+
+
 
         if(appuser.getTeamIds().isEmpty() && teamRepository.existsById(teamFavorite.getTeamId())) {
             List<HockeyTeam> favorites = new ArrayList<>();

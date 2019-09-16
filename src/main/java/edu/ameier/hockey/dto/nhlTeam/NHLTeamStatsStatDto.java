@@ -4,29 +4,6 @@ import lombok.Data;
 
 @Data
 public class NHLTeamStatsStatDto {
-//    long wins;
-//    long losses;
-//    long ot;
-//    long pts;
-//    long goalsPerGame;
-//    long goalsAgainstPerGame;
-//    long shotsPerGame;
-//    long shotsAllowedPerGame;
-//    long powerPlay;
-//    long penaltyKill;
-//    long savePctg;
-//    long faceOffs;
-//    String winsRank;
-//    String lossesRank;
-//    String ptsRank;
-//    String goalsPerGameRank;
-//    String goalsAgainstPerGameRank;
-//    String shotsPerGameRank;
-//    String powerPlayRank;
-//    String penaltyKillRank;
-//    String savePctgRank;
-//    String faceOffsRank;
-
     String wins;
     String losses;
     String ot;
@@ -37,7 +14,7 @@ public class NHLTeamStatsStatDto {
     String shotsAllowed;
     String powerPlayPercentage;
     String penaltyKillPercentage;
-    String savePercentage;
+    String savePctg;
     String faceOffWinPercentage;
 
 }

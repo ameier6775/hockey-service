@@ -7,6 +7,7 @@ import edu.ameier.hockey.services.PlayerService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -28,6 +29,13 @@ public class PlayerController {
         }
         return playerService.addPlayerToFavorites(playerFavorite);
     }
+
+    @GetMapping("/user/id/players")
+    public List<PlayerResponseDto> getPlayersForUser(HttpServletRequest request)
+    {
+        return playerService.getUserPlayers(request);
+    }
+
 
     @PatchMapping("/user/player/delete")
     public AppUser deletePlayer(@RequestBody PlayerFavorite playerFavorite) {

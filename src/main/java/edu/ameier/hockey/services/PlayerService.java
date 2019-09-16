@@ -157,6 +157,19 @@ public class PlayerService {
         return appuser;
     }
 
+    public List<PlayerResponseDto> getUserPlayers(HttpServletRequest request) {
+        AppUser appUser = getAppUserFromRequest(request);
+        List<Player> players  = appUser.getPlayerIds();
+        List<PlayerResponseDto> favPlayers = new ArrayList<>();
+        for (Player player:
+                players) {
+            long playerId = player.getPlayerId();
+            favPlayers.add(getPlayerStats(playerId, request));
+        }
+        return favPlayers;
+    }
+
+
     private AppUser getAppUserFromRequest(HttpServletRequest request)
     {
         String token = request.getHeader(HEADER_STRING);

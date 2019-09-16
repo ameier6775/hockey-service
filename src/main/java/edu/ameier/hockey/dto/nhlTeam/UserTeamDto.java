@@ -25,6 +25,9 @@ public class UserTeamDto {
     private float goalsAgainstPerGameNums;
     private float shotsPerGameNums;
     private float shotsAllowedPerGameNums;
+    private float powerPlayPct;
+    private float penaltyKillPct;
+    private float savePct;
     String winsRank;
     String lossesRank;
     String ptsRank;
@@ -33,7 +36,6 @@ public class UserTeamDto {
     String shotsPerGameRank;
     String powerPlayRank;
     String penaltyKillRank;
-    String savePctgRank;
     String faceOffsRank;
     List<NHLPlayersDto> roster;
 }
