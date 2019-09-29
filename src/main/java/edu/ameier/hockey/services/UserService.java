@@ -1,8 +1,6 @@
 package edu.ameier.hockey.services;
 
 import edu.ameier.hockey.models.AppUser;
-import edu.ameier.hockey.repositories.PlayerRepository;
-import edu.ameier.hockey.repositories.TeamRepository;
 import edu.ameier.hockey.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 

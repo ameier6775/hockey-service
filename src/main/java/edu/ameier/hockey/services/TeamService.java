@@ -112,6 +112,13 @@ public class TeamService {
 
         NHLRosterDto roster = withRoster.getTeams().get(0).getRoster();
 
+        for (HockeyTeam teamFav: appUser.getTeamIds()) {
+            if (teamFav.getTeamId() == statTeam.getId()) {
+                userTeam.setFavorite(true);
+            }
+        }
+
+
         userTeam.setRoster(roster.getRoster());
 
         userTeam.setId(statTeam.getId());
@@ -148,6 +155,11 @@ public class TeamService {
     public String getTeamRosterById(Long id) {
         String rosterId = id.toString();
         final String url = "http://statsapi.web.nhl.com/api/v1/teams/" + rosterId + "?expand=team.roster";
+        return restTemplateService.getHttpRestResponse(url);
+    }
+
+    public String getNHLStandings() {
+        final String url = "https://statsapi.web.nhl.com/api/v1/standings";
         return restTemplateService.getHttpRestResponse(url);
     }
 

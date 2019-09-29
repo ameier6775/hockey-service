@@ -4,7 +4,6 @@ import edu.ameier.hockey.dto.nhlTeam.UserTeamDto;
 import edu.ameier.hockey.dto.nhlTeam.TeamFavorite;
 import edu.ameier.hockey.dto.nhlTeam.UserTeamsDto;
 import edu.ameier.hockey.models.AppUser;
-import edu.ameier.hockey.models.HockeyTeam;
 import edu.ameier.hockey.services.TeamService;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,5 +62,8 @@ public class TeamController {
     {
         return teamService.getCup();
     }
+
+    @GetMapping("/standings")
+    public String getNHLStandings() { return teamService.getNHLStandings(); }
 
 }
