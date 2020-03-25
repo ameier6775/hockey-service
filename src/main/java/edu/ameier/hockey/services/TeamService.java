@@ -77,10 +77,11 @@ public class TeamService {
         return userTeams;
     }
 
-    public String getCup() {
+    public String getTrophy() {
         final String url = "http://records.nhl.com/site/api/trophy";
         return restTemplateService.getHttpRestResponse(url);
     }
+
 
     public UserTeamDto getTeamById(Long id, HttpServletRequest request) {
         String teamId = id.toString();

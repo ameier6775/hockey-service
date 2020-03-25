@@ -39,16 +39,20 @@ public class PlayerService {
         String playerId = id.toString();
         final String generalInfoUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId;
         String playerInfoResponse = restTemplateService.getHttpRestResponse(generalInfoUrl);
-        final String statsUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
+        final String statsUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20192020";
         String playerStatsResponse = restTemplateService.getHttpRestResponse(statsUrl);
+        final String lastYearStatsUrl = "http://statsapi.web.nhl.com/api/v1/people/" + playerId + "/stats?stats=statsSingleSeason&season=20182019";
+        String lastYearStatsResponse = restTemplateService.getHttpRestResponse(lastYearStatsUrl);
 
         AppUser appUser = getAppUserFromRequest(request);
         PlayerStatsGeneralDto playerStats = new PlayerStatsGeneralDto();
+        PlayerStatsGeneralDto lastYearStats = new PlayerStatsGeneralDto();
         PlayerInfoDto playerInfo = new PlayerInfoDto();
 
         try {
             playerInfo = mapper.readValue(playerInfoResponse, PlayerInfoDto.class);
             playerStats = mapper.readValue(playerStatsResponse, PlayerStatsGeneralDto.class);
+            lastYearStats = mapper.readValue(lastYearStatsResponse, PlayerStatsGeneralDto.class);
             log.info(playerStats.toString());
         }
 
@@ -61,6 +65,7 @@ public class PlayerService {
 
         PeopleDto info = playerInfo.getPeople().get(0);
         PlayerStatsStatDto stats = playerStats.getStats().get(0).getSplits().get(0).getStat();
+        PlayerStatsStatDto pastStats = lastYearStats.getStats().get(0).getSplits().get(0).getStat();
 
         for (Player playerFav: appUser.getPlayerIds()) {
             if (playerFav.getPlayerId() == info.getId()) {
@@ -93,7 +98,7 @@ public class PlayerService {
         player.setHits(stats.getHits());
         player.setTimeOnIcePerGame(stats.getTimeOnIcePerGame());
         player.setPim(stats.getPim());
-        player.setBlocks(stats.getBlocked());
+        player.setBlocks(stats.getBlocks());
         player.setShots(stats.getShots());
         player.setPowerPlayGoals(stats.getPowerPlayGoals());
         player.setPowerPlayPoints(stats.getPowerPlayPoints());
@@ -104,6 +109,15 @@ public class PlayerService {
         player.setShortHandedGoals(stats.getShortHandedGoals());
         player.setShortHandedPoints(stats.getShortHandedPoints());
         player.setPlusMinus(stats.getPlusMinus());
+
+        player.setLastYearGoals(pastStats.getGoals());
+        player.setLastYearAssists(pastStats.getAssists());
+        player.setLastYearPoints(pastStats.getPoints());
+        player.setLastYearPowerPlayPoints(pastStats.getPowerPlayPoints());
+        player.setLastYearShotsOnGoal(pastStats.getShots());
+        player.setLastYearPlusMinus(pastStats.getPlusMinus());
+        player.setLastYearBlocks(pastStats.getBlocks());
+        player.setLastYearHits(pastStats.getHits());
 
         return player;
     }
@@ -188,5 +202,7 @@ public class PlayerService {
 
         return userRepository.findByUserName(userName);
     }
+
+
 
 }

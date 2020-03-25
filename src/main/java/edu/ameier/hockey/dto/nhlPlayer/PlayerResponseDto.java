@@ -23,6 +23,16 @@ public class PlayerResponseDto {
     private int shortHandedPoints;
     private int plusMinus;
     private int points;
+    // 2018-2019 Stats
+    private int lastYearGoals;
+    private int lastYearAssists;
+    private int lastYearPoints;
+    private int lastYearPowerPlayPoints;
+    private int lastYearShotsOnGoal;
+    private int lastYearPlusMinus;
+    private int lastYearHits;
+    private int lastYearBlocks;
+    // 2018-2019 Stats end
     private int id;
     private String fullName;
     private String primaryNumber;

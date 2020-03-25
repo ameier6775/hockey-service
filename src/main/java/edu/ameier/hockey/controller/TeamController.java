@@ -57,10 +57,10 @@ public class TeamController {
         return teamService.getUserTeams(request);
     }
 
-    @GetMapping("/stanley")
-    public String stanleyCupWinners()
+    @GetMapping("/trophy")
+    public String getTrophy()
     {
-        return teamService.getCup();
+        return teamService.getTrophy();
     }
 
     @GetMapping("/standings")

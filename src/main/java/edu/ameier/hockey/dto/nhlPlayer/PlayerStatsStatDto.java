@@ -27,7 +27,7 @@ public class PlayerStatsStatDto {
     private int shortHandedGoals;
     private int shortHandedPoints;
     private String shortHandedTimeOnIce;
-    private int blocked;
+    private int blocks;
     private int plusMinus;
     private int points;
     private int shifts;
